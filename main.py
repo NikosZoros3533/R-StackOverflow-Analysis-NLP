@@ -3,8 +3,27 @@ from stackapi import StackAPI
 import json
 
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
-SITE.page_size = 4800
+
+
+"""
+TODO
+-->make a function that start from startpage  (with pagesize  100) and go up till maxpagesize=100
+and collect 10000 questions.
+
+-->call that function until the property "hasmore"=false 
+
+-->dump in a jsonfile
+
+"""
+SITE.page_size = 100
 SITE.max_pages = 100
-rquestions = SITE.fetch('questions', tagged='R')
-#print(len(rquestions['items']))
-#print(rquestions)
+rquestions = SITE.fetch('questions', tagged='R',)
+
+with open("rrquestions.json", "w") as f:
+    json.dump(rquestions, f)
+
+
+print(len(rquestions['items']))
+
+
+
