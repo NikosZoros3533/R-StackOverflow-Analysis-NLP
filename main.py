@@ -13,7 +13,7 @@ and collect 10000 questions.
 -->call that function until the property "hasmore"=false 
 
 -->dump in a jsonfile
-
+rquestions = SITE.fetch('questions', tagged='R',page=....)
 """
 SITE.page_size = 100
 SITE.max_pages = 100
