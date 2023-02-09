@@ -15,15 +15,14 @@ and collect 10000 questions.
 -->dump in a jsonfile
 rquestions = SITE.fetch('questions', tagged='R',page=....)
 """
-SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
-SITE.page_size = 2
-SITE.max_pages = 1
 
-questions = []
+
 """This function takes as parameter the page it should start and fetch the next 10k questions and returns them"""
 def fetch_bath_questions(startpage):
     tempquestions = SITE.fetch('questions', tagged='R', page=startpage)
     return tempquestions['items']
+
+
 
 
 """This function takes as a parameter the starting page and increment it by"""
@@ -40,12 +39,32 @@ def fetch_all_data(rquestions):
         tempquestions = fetch_bath_questions(pages)
         rquestions.extend(tempquestions)
         """time.sleep(2)"""
+    print(pages)
 
+"""This function takes as a parameter a dict of questions and extract all the owners of them"""
+def create_owners(questions):
+    tempowners = []
+    for x in range(len(questions)):
+        tempowners.append(questions[x]["owner"])
+    return tempowners
+
+
+
+SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
+SITE.page_size = 2
+SITE.max_pages = 1
+
+questions = []
 
 fetch_all_data(questions)
 
+
+owners = create_owners(questions)
 print(questions)
+print(owners)
+
 print(len(questions))
+print(len(owners))
 
 
 
