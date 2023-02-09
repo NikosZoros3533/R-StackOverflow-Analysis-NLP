@@ -16,14 +16,14 @@ and collect 10000 questions.
 rquestions = SITE.fetch('questions', tagged='R',page=....)
 """
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
-SITE.page_size = 10
-SITE.max_pages = 10
+SITE.page_size = 2
+SITE.max_pages = 1
 
 questions = []
 """This function takes as parameter the page it should start and fetch the next 10k questions and returns them"""
 def fetch_bath_questions(startpage):
     tempquestions = SITE.fetch('questions', tagged='R', page=startpage)
-    return tempquestions["items"]
+    return tempquestions['items']
 
 
 """This function takes as a parameter the starting page and increment it by"""
@@ -51,13 +51,13 @@ print(len(questions))
 
 
 
-
 """
-with open("questions.json", "w") as f:
-    json.dump(rquestions, f)
 
-print(len(rquestions['items']))
+with open("4questions.json", "w") as f:
+    json.dump(questions, f)
 
+print(len(questions['items']))
 """
+
 
 
