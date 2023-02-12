@@ -11,6 +11,8 @@ TODO
 -->dump in a jsonfile
 rquestions = SITE.fetch('questions', tagged='R',page=....)
 use data dump
+
+-->From the questions I want to extract the title and the body
 """
 
 
@@ -21,15 +23,44 @@ ids = set()
 
 
 
+
+
+
+
+
+"""
+This function take data as a parameter and extract a list of dictionaries that are made in
+the function ,that each question is formatted as
+"title":title
+"body":body
+"""
+def extract_question(data):
+    questionsdict = []
+    for item in data["items"]:
+        tempquestion = {
+            'title': item['title'],
+            'body': item['body'],
+        }
+        questionsdict.append(tempquestion)
+    return questionsdict
+
+
+
+
+
+
+
+
+
+
+
 """
 This function takes as parameter the page it should start and fetch the next maxpages x pagesize
 questions and returns them
  """
 def fetch_batch_questions(startpage):
-    tempquestions = SITE.fetch('questions', tagged='R', page=startpage)
-    return tempquestions
-
-
+    batch_of_questions = SITE.fetch('questions', filter="withbody", tagged='R', page=startpage)
+    return batch_of_questions
 
 
 
@@ -104,11 +135,12 @@ def testing_fetch_all_data():
         data = fetch_batch_questions(startpage)
         print("fetching...")
         owners.extend(extract_unique_users(data))
-        questions.extend(data["items"])
+        # questions.extend(data["items"])
+        questions.extend(extract_question(data))
         has_more = data["has_more"]
         backoff = data["backoff"]
         quota_remaining = data["quota_remaining"]
-        if not has_more or len(questions) >= 480:
+        if not has_more or len(questions) >= 12:
             return questions, owners
         if quota_remaining <= 3:
             time.sleep(3600)
@@ -137,10 +169,19 @@ def testing_fetch_all_data():
 
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
 SITE.page_size = 10
-SITE.max_pages = 10
+SITE.max_pages = 1
 
-questionsR, ownersofR = testing_fetch_all_data()
 
+
+
+
+
+
+
+questions_wth_tag_R, owners_of_questions = testing_fetch_all_data()
+print(questions_wth_tag_R)
+print(owners_of_questions)
+"""
 with open("questionsR.json", "w") as f:
     json.dump(questionsR, f)
 
@@ -149,7 +190,7 @@ with open("ownersofR.json", "w") as f2:
 
 print(len(questionsR))
 print(len(ownersofR))
-
+"""
 
 
 
