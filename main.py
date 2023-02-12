@@ -12,7 +12,11 @@ TODO
 rquestions = SITE.fetch('questions', tagged='R',page=....)
 use data dump
 
--->From the questions I want to extract the title and the body
+
+-->Collect the question history of the users(ids) that asked with the tag R 
+iterate into ids and create a dict with info of owner one time and all his questions  
+
+
 """
 
 
@@ -20,7 +24,6 @@ use data dump
 
 
 ids = set()
-
 
 
 
@@ -181,15 +184,19 @@ SITE.max_pages = 1
 questions_wth_tag_R, owners_of_questions = testing_fetch_all_data()
 print(questions_wth_tag_R)
 print(owners_of_questions)
+
+
 """
 with open("questionsR.json", "w") as f:
     json.dump(questionsR, f)
 
-with open("ownersofR.json", "w") as f2:
-    json.dump(ownersofR, f2)
+
+with open('questionswithbody.json') as json_f:
+    questions4 = json.load(json_f)
 
 print(len(questionsR))
 print(len(ownersofR))
+
 """
 
 
