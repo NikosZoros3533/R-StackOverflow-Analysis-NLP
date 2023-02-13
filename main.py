@@ -23,7 +23,7 @@ iterate into ids and create a dict with info of owner one time and all his quest
 
 
 
-ids = set()
+idskeys = set()
 
 
 
@@ -78,14 +78,14 @@ saves their ids in the global set of ids
 """
 def extract_unique_users(data):
     unique_users = []
-    global ids
+    global idskeys
 
     for item in data["items"]:
         user = item["owner"]
         idkey = item["owner"]["user_id"]
-        if idkey not in ids:
+        if idkey not in idskeys:
             unique_users.append(user)
-        ids.add(idkey)
+        idskeys.add(idkey)
 
     return unique_users
 
@@ -208,7 +208,7 @@ SITE.max_pages = 10
 questions_wth_tag_R, owners_of_questions = testing_fetch_all_data()
 # print(questions_wth_tag_R)
 # print(owners_of_questions)
-print(ids)
+
 
 
 
