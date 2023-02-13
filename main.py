@@ -157,6 +157,30 @@ def testing_fetch_all_data():
 
 
 
+"""
+This function takes the data as a parameter the ids of users that we want
+to get all the questions from and return a list of dictionaries with the format
+"owner":"owner_info"
+"questions":"questions_info"
+"""
+def get_questions_by_users_id(ids):
+    dictquestionsbyusers = []
+    for key in ids:
+        questions = []
+        dataa = SITE.fetch('users/{ids}/questions', ids=key, filter="withbody")
+        print(f"fetching the user with id {key}")
+        for item in dataa["items"]:
+            questionofowner = {}
+            for dictkey in item:
+                if (dictkey != "tags") and (dictkey != "owner"):
+                    questionofowner[dictkey] = item[dictkey]
+
+            questions.append(questionofowner)
+
+        ownerandquestions = {"owner": dataa["items"][0]["owner"], "questions": questions}
+
+        dictquestionsbyusers.append(ownerandquestions)
+    return dictquestionsbyusers
 
 
 
@@ -171,8 +195,8 @@ def testing_fetch_all_data():
 
 
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
-SITE.page_size = 10
-SITE.max_pages = 1
+SITE.page_size = 20
+SITE.max_pages = 10
 
 
 
@@ -182,8 +206,24 @@ SITE.max_pages = 1
 
 
 questions_wth_tag_R, owners_of_questions = testing_fetch_all_data()
-print(questions_wth_tag_R)
-print(owners_of_questions)
+# print(questions_wth_tag_R)
+# print(owners_of_questions)
+print(ids)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 """
@@ -198,21 +238,6 @@ print(len(questionsR))
 print(len(ownersofR))
 
 """
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
