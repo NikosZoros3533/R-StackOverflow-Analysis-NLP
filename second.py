@@ -1,6 +1,7 @@
-"""
+
 from stackapi import StackAPI
 import json
+"""
 idskeys = (3325952, 21098497, 18169859, 7898115, 7489539, 14348302,
            14612502, 186904, 21027866, 19726876, 5133853, 3632673, 21197349,
            21193770, 21185588, 10260021, 1969717, 4463161, 3056186, 1958465, 19621442,
@@ -50,29 +51,12 @@ print(data["items"][0]["owner"])
 
 
 
-def get_questions_by_users_id(ids):
-    dictquestionsbyusers = []
-    for key in ids:
-        questions = []
-        dataa = SITE.fetch('users/{ids}/questions', ids=key, filter="withbody")
-        print(f"fetching the user with id {key}")
-        for item in dataa["items"]:
-            questionofowner = {}
-            for dictkey in item:
-                if (dictkey != "tags") and (dictkey != "owner"):
-                    questionofowner[dictkey] = item[dictkey]
 
-            questions.append(questionofowner)
-
-        ownerandquestions = {"owner": dataa["items"][0]["owner"], "questions": questions}
-
-        dictquestionsbyusers.append(ownerandquestions)
-    return dictquestionsbyusers
+with open('questionsR.json') as json_f:
+    data = json.load(json_f)
 
 
-
-
-
+questionsbyusers = SITE.fetch('users/{ids}/questions', ids=21098497)
 
 
            questionofowner = {
@@ -90,7 +74,16 @@ def get_questions_by_users_id(ids):
                'title': item['title'],
                'body': item['body'],
                            }
-    """
+
+
+
+
+
+SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
+SITE.page_size = 100
+SITE.max_pages = 1
+customfilter = '!*MjkmySTGk)eZ2O6'
+data = SITE.fetch('questions', filter=customfilter, include='votes', tagged='R')
 
 
 
@@ -102,10 +95,39 @@ def get_questions_by_users_id(ids):
 
 
 
+def extract_question(dataa):
+    questionsdict = []
+    for item in dataa["items"]:
+        accepted_answer_id = 0
+        if "accepted_answer_id" in item:
+            accepted_answer_id = item['accepted_answer_id']
+        tempquestion = {
+
+            'tags': item['tags'],
+            'is_answered': item['is_answered'],
+            'view_count': item['view_count'],
+            'accepted_answer_id': accepted_answer_id,
+            'down_vote_count': item['down_vote_count'],
+            'up_vote_count': item['up_vote_count'],
+            'answer_count': item['answer_count'],
+            'score': item['score'],
+            'last_activity_date': item['last_activity_date'],
+            'creation_date': item['creation_date'],
+            'question_id': item['question_id'],
+            'link': item['link'],
+            'title': item['title'],
+            'body': item['body'],
+            'owner_user_id': item["owner"]['user_id'],
+            'owner_display_name': item["owner"]['display_name']
+
+        }
+        questionsdict.append(tempquestion)
+    return questionsdict
+"""
 
 
 
 
+questions = extract_question(data)
+print(questions)
 
-
-# questionsbyusers = SITE.fetch('users/{ids}/questions', ids=21098497)
