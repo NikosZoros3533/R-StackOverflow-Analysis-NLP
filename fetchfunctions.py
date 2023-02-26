@@ -1,9 +1,7 @@
-import requests
+import time
+import pandas as pd
 from stackapi import StackAPI
 import json
-import time
-
-
 
 """
 TODO
@@ -23,7 +21,9 @@ iterate into ids and create a dict with info of owner one time and all his quest
 
 
 
-idskeys = set()
+idsownerkeys = set()
+questionids = set()
+
 
 
 
@@ -39,12 +39,20 @@ the function ,that each question is formatted as
 """
 def extract_question(dataa):
     questionsdict = []
+    global questionids
     for item in dataa["items"]:
         accepted_answer_id = 0
+        ownerid = 0
+        ownerdisplay = 0
         if "accepted_answer_id" in item:
             accepted_answer_id = item['accepted_answer_id']
+        if 'owner' in item:
+            ownerid = item['owner'].get('user_id')
+            ownerdisplay = item['owner'].get('display_name')
+        if item['question_id'] in questionids:
+            continue
+        questionids.add(item['question_id'])
         tempquestion = {
-
             'tags': item['tags'],
             'is_answered': item['is_answered'],
             'view_count': item['view_count'],
@@ -59,8 +67,8 @@ def extract_question(dataa):
             'link': item['link'],
             'title': item['title'],
             'body': item['body'],
-            'owner_user_id': item["owner"]['user_id'],
-            'owner_display_name': item["owner"]['display_name']
+            'owner_user_id': ownerid,
+            'owner_display_name': ownerdisplay,
 
         }
         questionsdict.append(tempquestion)
@@ -98,14 +106,14 @@ saves their ids in the global set of ids
 """
 def extract_unique_users(data):
     unique_users = []
-    global idskeys
+    global idsownerkeys
 
     for item in data["items"]:
         user = item["owner"]
         idkey = item["owner"]["user_id"]
-        if idkey not in idskeys:
+        if idkey not in idsownerkeys:
             unique_users.append(user)
-        idskeys.add(idkey)
+        idsownerkeys.add(idkey)
 
     return unique_users
 
@@ -118,29 +126,32 @@ def extract_unique_users(data):
 """This function fetch all  questions and returns them ,as well as all the unique owners of these"""
 def fetch_all_data():
     startpage = 1
-    fetching = True
+    has_more = True
     questions = []
-    owners = []
 
-    while fetching:
+
+    while has_more:
         data = fetch_batch_questions(startpage)
         print("fetching...")
-        owners.extend(extract_unique_users(data))
-        questions.extend(data["items"])
+        tempquestions = extract_question(data)
+        questions.extend(tempquestions)
         has_more = data["has_more"]
         backoff = data["backoff"]
         quota_remaining = data["quota_remaining"]
-        if not has_more or len(questions) >= 480000:
-            return questions, owners
+        if len(questions) >= 20:
+            print(f"checking...{has_more}")
+            return questions
         if quota_remaining <= 3:
             time.sleep(3600)
             print("sleeping for the day")
         if backoff:
             time.sleep(backoff+1)
-            print("sleeping for a sec")
+            print("backing off")
+        print("sleeping for a sec")
         time.sleep(1)
-        startpage += 100
-    return questions, owners
+        print(f"startpage:{startpage} and page:{data['page']}")
+        startpage += 1
+
 
 
 
@@ -163,7 +174,7 @@ def testing_fetch_all_data():
         has_more = data["has_more"]
         backoff = data["backoff"]
         quota_remaining = data["quota_remaining"]
-        if not has_more or len(questions) >= 200:
+        if not has_more or len(questions) >= 20:
             return questions, owners
         if quota_remaining <= 3:
             time.sleep(3600)
@@ -216,7 +227,12 @@ def get_questions_by_users_id(ids):
 
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
 SITE.page_size = 10
-SITE.max_pages = 10
+SITE.max_pages = 1
+
+
+
+# dataframe1 = pd.DataFrame.from_records(quetions_with_tag_R)
+# dataframe1.to_csv('questions_with_tagR.csv', index=False)
 
 
 
@@ -224,10 +240,6 @@ SITE.max_pages = 10
 
 
 
-
-questions_wth_tag_R, owners_of_questions = testing_fetch_all_data()
-print(questions_wth_tag_R)
-print(len(questions_wth_tag_R))
 # print(questions_wth_tag_R)
 # print(owners_of_questions)
 
@@ -258,12 +270,13 @@ with open('questionswithbody.json') as json_f:
 
 print(len(questionsR))
 print(len(ownersofR))
+  dataframe1 = pd.DataFrame.from_records(questions)
+    dataframe1.to_csv('questions.csv', mode='w', index=False)
 
-"""
 
 
 
-"""
+
 with open("questions.json", "w") as f:
     json.dump(questions, f)
 """
