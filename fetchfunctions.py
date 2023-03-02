@@ -231,7 +231,6 @@ def get_rid_of_dupls(csv_file):
     df.to_csv('questionstagRwithoutdupls4.csv', index=False)
 
 
-
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
 SITE.page_size = 10
 SITE.max_pages = 1

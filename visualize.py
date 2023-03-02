@@ -6,7 +6,31 @@ import datetime
 
 
 
-# Set the plot style to "ggplot"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+
+
+#  Set the plot style to "ggplot"
 plt.style.use('ggplot')
 
 # Read the CSV file into a Pandas DataFrame object
@@ -51,16 +75,6 @@ plt.show()
 
 
 
-
-
-
-
-
-
-
-
-
-"""
 # Read the CSV file into a Pandas DataFrame object
 df = pd.read_csv("questionstagRwithoutdupls4.csv")
 
