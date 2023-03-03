@@ -14,14 +14,15 @@ idsofowners={993414, 9790769, 17590417, 5970296, 19794621, 3867094, 3428818, 394
              10530140, 892071, 12478649, 12326087, 8966221, 17907602, 8667256, 14874374, 17448770, 20371419,
              4322048, 3886279, 6378990, 19676936, 13400539, 180219, 12213672, 2356119, 1898986, 10739838,
              13604719, 6312563, 804253, 3540724, 697964, 5142360, 4975144, 3541045, 1438908, 4343562}
-
+idsofowners2 = {993414, 9790769, 17590417, 5970296, 19794621, 3867094, 3428818, 3949312, 4401242, 15271002}
 
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
-SITE.page_size = 10
-SITE.max_pages = 1
+SITE.page_size = 100
+SITE.max_pages = 100
 
-SITE.fetch('users/{ids}/questions', ids=idsofowners, filter="withbody")
 
+data = SITE.fetch('users/{ids}/questions', ids=idsofowners , filter='!*MjkmySTGk)eZ2O6')
+print(data)
 
 
 

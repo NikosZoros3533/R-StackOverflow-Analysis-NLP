@@ -78,25 +78,6 @@ def fetch_batch_questions(startpage):
 
 
 
-"""
-This takes as a parameter the data that we collect from the API and extact and return a list of unique users after it
-saves their ids in the global set of ids 
-"""
-def extract_unique_users(data):
-    unique_users = []
-    global idsownerkeys
-
-    for item in data["items"]:
-        user = item["owner"]
-        idkey = item["owner"]["user_id"]
-        if idkey not in idsownerkeys:
-            unique_users.append(user)
-        idsownerkeys.add(idkey)
-
-    return unique_users
-
-
-
 """This function fetch all  questions and returns them ,as well as all the unique owners of these"""
 def fetch_all_data():
     startpage = 1
