@@ -4,19 +4,6 @@ from stackapi import StackAPI
 import json
 import csv
 
-"""
-TODO
-
--->dump in a jsonfile
-rquestions = SITE.fetch('questions', tagged='R',page=....)
-use data dump
-
-
--->Collect the question history of the users(ids) that asked with the tag R 
-iterate into ids and create a dict with info of owner one time and all his questions  
-
-
-"""
 
 
 
@@ -79,12 +66,6 @@ def extract_question(dataa):
 
 
 
-
-
-
-
-
-
 """
 This function takes as parameter the page it should start and fetch the next maxpages x pagesize
 questions and returns them
@@ -93,10 +74,6 @@ def fetch_batch_questions(startpage):
     customfilter = '!*MjkmySTGk)eZ2O6'
     batch_of_questions = SITE.fetch('questions', filter=customfilter, include='votes', tagged='R', page=startpage)
     return batch_of_questions
-
-
-
-
 
 
 
@@ -117,10 +94,6 @@ def extract_unique_users(data):
         idsownerkeys.add(idkey)
 
     return unique_users
-
-
-
-
 
 
 
@@ -152,7 +125,6 @@ def fetch_all_data():
         time.sleep(1)
         print(f"startpage:{startpage} and page:{data['page']}")
         startpage += 1
-
 
 
 
@@ -189,6 +161,8 @@ def testing_fetch_all_data():
     return questions, owners
 
 
+
+
 """
 This function takes the data as a parameter the ids of users that we want
 to get all the questions from and return a list of dictionaries with the format
@@ -217,7 +191,6 @@ def get_questions_by_users_id(ids):
 
 
 
-
 def get_col_of_csv(csv_file, column):
     with open(csv_file, 'r', encoding='utf-8-sig') as file:  # 'questionstagRwithoutdupls4.csv'
         reader = csv.DictReader(file)
@@ -231,10 +204,18 @@ def get_rid_of_dupls(csv_file):
     df.to_csv('questionstagRwithoutdupls4.csv', index=False)
 
 
-SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
-SITE.page_size = 10
-SITE.max_pages = 1
+"""
+This function reads from a json file that 
+is saved the ids of owners that asked the R questions and removes the ids 
+that are passed and put them back.
 
+"""
+def remove_ids_from_set(ids):
+    with open('idsofowners.json', 'r') as f:
+        data = json.load(f)
+    data['items'].remove(ids)
+    with open('idsofowners.json', 'w') as f:
+        json.dump(data, f)
 
 
 
