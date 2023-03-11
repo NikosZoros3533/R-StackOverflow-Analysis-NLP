@@ -4,56 +4,9 @@ import datetime
 
 
 
-"""
-SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
-SITE.page_size = 10
-SITE.max_pages = 1
-
-SITE.fetch('users/{ids}/questions', ids=idsofowners.pop(100), filter="withbody")
-
-"""
-
-"""
-put ids in a json file
-        with open('questionstagRwithoutdupls4.csv', 'r', encoding='utf-8-sig') as file:
-            reader = csv.DictReader(file)
-            idsofowners = {row['owner_user_id'] for row in reader}
-
-        print(len(idsofowners))
-
-        ids={'items': list(idsofowners)}
-        with open('idsofowners.json', 'w') as f:
-            json.dump(ids, f)
 
 
-
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-
-
-#  Set the plot style to "ggplot"
+# Set the plot style to "ggplot"
 plt.style.use('ggplot')
 
 # Read the CSV file into a Pandas DataFrame object
@@ -98,6 +51,16 @@ plt.show()
 
 
 
+
+
+
+
+
+
+
+
+
+"""
 # Read the CSV file into a Pandas DataFrame object
 df = pd.read_csv("questionstagRwithoutdupls4.csv")
 

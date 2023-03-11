@@ -9,8 +9,6 @@ import csv
 
 
 
-idsownerkeys = set()
-questionids = set()
 
 
 
@@ -66,6 +64,12 @@ def extract_question(dataa):
 
 
 
+
+
+
+
+
+
 """
 This function takes as parameter the page it should start and fetch the next maxpages x pagesize
 questions and returns them
@@ -74,6 +78,33 @@ def fetch_batch_questions(startpage):
     customfilter = '!*MjkmySTGk)eZ2O6'
     batch_of_questions = SITE.fetch('questions', filter=customfilter, include='votes', tagged='R', page=startpage)
     return batch_of_questions
+
+
+
+
+
+
+
+
+"""
+This takes as a parameter the data that we collect from the API and extact and return a list of unique users after it
+saves their ids in the global set of ids 
+"""
+def extract_unique_users(data):
+    unique_users = []
+    global idsownerkeys
+
+    for item in data["items"]:
+        user = item["owner"]
+        idkey = item["owner"]["user_id"]
+        if idkey not in idsownerkeys:
+            unique_users.append(user)
+        idsownerkeys.add(idkey)
+
+    return unique_users
+
+
+
 
 
 
@@ -110,6 +141,7 @@ def fetch_all_data():
 
 
 
+
 """
 This is the same as fetch_all_data function that is testing for a smaller 
 amount of data
@@ -142,8 +174,6 @@ def testing_fetch_all_data():
     return questions, owners
 
 
-
-
 """
 This function takes the data as a parameter the ids of users that we want
 to get all the questions from and return a list of dictionaries with the format
@@ -172,6 +202,7 @@ def get_questions_by_users_id(ids):
 
 
 
+
 def get_col_of_csv(csv_file, column):
     with open(csv_file, 'r', encoding='utf-8-sig') as file:  # 'questionstagRwithoutdupls4.csv'
         reader = csv.DictReader(file)
@@ -185,18 +216,11 @@ def get_rid_of_dupls(csv_file):
     df.to_csv('questionstagRwithoutdupls4.csv', index=False)
 
 
-"""
-This function reads from a json file that 
-is saved the ids of owners that asked the R questions and removes the ids 
-that are passed and put them back.
 
-"""
-def remove_ids_from_set(ids):
-    with open('idsofowners.json', 'r') as f:
-        data = json.load(f)
-    data['items'].remove(ids)
-    with open('idsofowners.json', 'w') as f:
-        json.dump(data, f)
+SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
+SITE.page_size = 10
+SITE.max_pages = 1
+
 
 
 
