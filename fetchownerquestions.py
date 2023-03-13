@@ -89,33 +89,64 @@ def save_in_csv_file(file, questions):
 
 
 
-
-
 def fetch_all_questions_by_ids(ids):
     questions = []
+    global num_of_fetched_ids
 
     while ids:
-        batch = random.sample(list(ids), min(10, len(ids)))
-
+        batch = random.sample(list(ids), min(10, len(ids)))    # will do 100
         data = fetch_questions_by_ids(set(batch))
+        backoff = data["backoff"]
+        quota_remaining = data["quota_remaining"]
+        if quota_remaining <= 3:
+            print(quota_remaining)
+            time.sleep(3600)
+            print("sleeping for the day")
+        if backoff:
+            time.sleep(backoff+1)
+            print("backing off")
         tempquestions = extract_questions_of_users(data)
-        save_in_csv_file("questionsbyonwers.csv", tempquestions)
+#        save_in_csv_file("questionsbyonwers.csv", tempquestions)
         questions.extend(tempquestions)
-
+        num_of_fetched_ids += 100
         ids -= set(batch)
-        remove_fetched_ids_from_all("idsofowners100.json", batch)
+        remove_fetched_ids_from_all("idsofowners100.json", batch)    #  will do "idsofownersints.json"
     return questions
 
 
-#  tempquestionsdata = fetch_questions_by_ids(idsofowners10)
-questions2 = fetch_all_questions_by_ids(idsofowners112)
-print(questions2)
-print(len(questions2))
+with open("data/idsofownersints.json") as f:
+    all_ids = set(json.load(f))
+
+
+num_of_fetched_ids = 0
+questionsbyonwers = fetch_all_questions_by_ids(all_ids)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 """
+#  tempquestionsdata = fetch_questions_by_ids(idsofowners10)
+questions2 = fetch_all_questions_by_ids(idsofowners112)
+print(questions2)
+print(len(questions2))
 
 
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
