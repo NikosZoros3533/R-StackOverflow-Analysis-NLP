@@ -19,11 +19,11 @@ idsofowners112 = {993414, 9790769, 17590417, 5970296, 19794621, 3867094, 3428818
                13604719, 6312563, 804253, 3540724, 697964, 5142360, 4975144, 3541045, 1438908, 4343562, 10998057, 11766396,
                7474569, 11953784, 2030296, 13342467, 13122297, 5775436, 7441389, 4203273, 4982995, 965145}
 idsofowners10 = {10530140, 892071, 12478649, 12326087, 8966221, 17907602, 8667256, 14874374, 17448770, 20371419}
-
+"""
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
 SITE.page_size = 100
 SITE.max_pages = 100
-
+"""
 
 
 
@@ -58,13 +58,15 @@ def extract_questions_of_users(dataa):
     return questionsdict
 
 
-def remove_fetched_ids_from_all(file, ids):
-    with open(file) as f:
-        usersids = set(json.load(f))
+"""
+def remove_fetched_ids_from_all(file3, ids):
+    with open(file3) as filee:
+        usersids = set(json.load(filee))
 
     usersids.difference_update(ids)
-    with open(file, 'w') as f:
-        json.dump(list(usersids), f)
+    with open(file3, 'w') as filee:
+        json.dump(list(usersids), filee)
+"""
 
 
 def fetch_questions_by_ids(temp_ids):
@@ -75,14 +77,14 @@ def fetch_questions_by_ids(temp_ids):
     return batch_data
 
 
-def save_in_csv_file(file, questions):
-    if os.path.exists(file):
+def save_in_csv_file(file2, questions):
+    if os.path.exists(file2):
         dataframe1 = pd.DataFrame.from_records(questions)
-        dataframe1.to_csv(file, mode='a', index=False, header=False)
+        dataframe1.to_csv(file2, mode='a', index=False, header=False)
 
     else:
         dataframe1 = pd.DataFrame.from_records(questions)
-        dataframe1.to_csv(file, mode='w', index=False)
+        dataframe1.to_csv(file2, mode='w', index=False)
 
 
 
@@ -91,11 +93,12 @@ def save_in_csv_file(file, questions):
 
 def fetch_all_questions_by_ids(ids):
     questions = []
-    global num_of_fetched_ids
+    num_of_fetched_ids = 0
 
     while ids:
-        batch = random.sample(list(ids), min(10, len(ids)))    # will do 100
+        batch = random.sample(list(ids), min(100, len(ids)))    # will do 10
         data = fetch_questions_by_ids(set(batch))
+        print("Loading...")
         backoff = data["backoff"]
         quota_remaining = data["quota_remaining"]
         if quota_remaining <= 3:
@@ -106,43 +109,90 @@ def fetch_all_questions_by_ids(ids):
             time.sleep(backoff+1)
             print("backing off")
         tempquestions = extract_questions_of_users(data)
-#        save_in_csv_file("questionsbyonwers.csv", tempquestions)
+        save_in_csv_file("questionsbyonwers2.csv", tempquestions)
         questions.extend(tempquestions)
         num_of_fetched_ids += 100
         ids -= set(batch)
-        remove_fetched_ids_from_all("idsofowners100.json", batch)    #  will do "idsofownersints.json"
-    return questions
+    return num_of_fetched_ids
+
+
+
+
+with open('questionsbyonwers2.csv', 'r', encoding='utf-8-sig') as file:
+    reader = csv.DictReader(file)
+    questionids = {row['owner_user_id'] for row in reader}
+
+print(len(questionids))
+"""
+with open('data/idsofownersnew2.json', 'r') as file:
+    all_ids = set(json.load(file))
+
+questionids2 = list(map(int, questionids))
+
+
+newids = all_ids - set(questionids2)
+
+fetched_ids = fetch_all_questions_by_ids(newids)
+print(fetched_ids)
+"""
+
+
+"""
+#read idsofowenrs and put it in a json as ints
+          with open('data/idsofowners.json', 'r') as file:
+                json_data = json.load(file)
+        all_ids = []
+    for item in json_data["items"]:
+        try:
+            all_ids.append(int(item))
+        except ValueError:
+            pass
+    print(len(all_ids))
+    
+    with open('data/idsofownersnew2.json', 'w') as f:
+        json.dump(all_ids, f)
+  
+
+    
+
+
+
+#check if superset and remove ids from all
+
+    with open('questionsbyonwers.csv', 'r', encoding='utf-8-sig') as file:
+    reader = csv.DictReader(file)
+    questionids = {row['owner_user_id'] for row in reader}
+    print(len(questionids))
+    questionids = list(map(int, questionids))
+    questionids2 = set(questionids)
+    
+    with open('data/idsofownersints.json') as f:
+        numallids = set(json.load(f))
+    print(len(numallids))
+    
+    print(questionids2.issubset(numallids))
+    if questionids2.issubset(numallids):
+        with open('idsofownersnew.json', 'w') as f:
+            new = numallids - questionids2
+            print(len(new))
+            json.dump(new, f)
+
+
+
 
 
 with open("data/idsofownersints.json") as f:
     all_ids = set(json.load(f))
 
 
-num_of_fetched_ids = 0
-questionsbyonwers = fetch_all_questions_by_ids(all_ids)
+
+total_fetched = fetch_all_questions_by_ids(all_ids)
+print(total_fetched)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
 #  tempquestionsdata = fetch_questions_by_ids(idsofowners10)
 questions2 = fetch_all_questions_by_ids(idsofowners112)
 print(questions2)
