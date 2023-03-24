@@ -19,11 +19,11 @@ idsofowners112 = {993414, 9790769, 17590417, 5970296, 19794621, 3867094, 3428818
                13604719, 6312563, 804253, 3540724, 697964, 5142360, 4975144, 3541045, 1438908, 4343562, 10998057, 11766396,
                7474569, 11953784, 2030296, 13342467, 13122297, 5775436, 7441389, 4203273, 4982995, 965145}
 idsofowners10 = {10530140, 892071, 12478649, 12326087, 8966221, 17907602, 8667256, 14874374, 17448770, 20371419}
-"""
+
 SITE = StackAPI('stackoverflow', key="z4*7kJUg2KkWHjeqU4N7zw((")
 SITE.page_size = 100
 SITE.max_pages = 100
-"""
+
 
 
 
@@ -131,6 +131,7 @@ questionids2 = list(map(int, questionids))
 
 
 newids = all_ids - set(questionids2)
+
 
 fetched_ids = fetch_all_questions_by_ids(newids)
 print(fetched_ids)
