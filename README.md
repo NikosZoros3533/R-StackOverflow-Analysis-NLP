@@ -3,7 +3,7 @@
 This repository contains the source code, datasets, and analysis for my thesis, which explores trends and popular topics in the R programming language community on Stack Overflow. By leveraging statistical analysis and natural language processing (NLP) techniques, this research identifies key areas of interest such as **DataFrame Operations** and **Data Visualization**, while uncovering insightful patterns within the R-tagged questions.
 
 ---
-[License of the Thesis](https://ikee.lib.auth.gr/record/354696/?ln=el)
+[License of the Thesis || ](https://ikee.lib.auth.gr/record/354696/?ln=el)  [Download PDF](NikosZoros.pdf)
 ---
 
 ## 🛠️ Methodology
